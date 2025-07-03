@@ -1,6 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-const ConnectsButton = ()=>{
+const WalletConnectButton = ()=>{
     return(
         <>
          <div className="mb-4">
@@ -10,4 +10,4 @@ const ConnectsButton = ()=>{
     )
 }
 
-export default ConnectsButton;
+export default WalletConnectButton;
