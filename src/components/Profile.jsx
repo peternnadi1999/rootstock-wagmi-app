@@ -3,11 +3,11 @@ import {
   useBalance,
   useReadContract,
   useWriteContract,
+  useWaitForTransactionReceipt,
 } from "wagmi";
-import {erc20Abi, ERC20_ADDRESS } from "../config/abi"
+import { erc20Abi, ERC20_ADDRESS } from "../config/abi";
 import { useState } from "react";
 import { formatUnits } from "viem";
-
 
 function Profile() {
   const { address, isConnected } = useAccount();
@@ -29,11 +29,19 @@ function Profile() {
   const {
     writeContract,
     isPending: isMinting,
-    isSuccess,
+    data: hash,
     error,
   } = useWriteContract();
 
   const [mintAmount, setMintAmount] = useState("");
+
+  // Wait for transaction receipt
+  useWaitForTransactionReceipt({
+    hash,
+    onSuccess: () => {
+      refetch(); // Refetch balance once transaction is confirmed
+    },
+  });
 
   const handleMint = async () => {
     try {
@@ -43,7 +51,6 @@ function Profile() {
         functionName: "mint",
         args: [BigInt(mintAmount)],
       });
-      setTimeout(() => refetch(), 3000);
     } catch (err) {
       console.error("Minting failed:", err);
     }
@@ -51,7 +58,7 @@ function Profile() {
 
   return (
     <div className="flex justify-center m-auto w-1/2 items-center min-h-screen bg-gray-100 px-4">
-      <div className="w-full  bg-white p-6 rounded-xl shadow-md text-center">
+      <div className="w-full bg-white p-6 rounded-xl shadow-md text-center">
         {isConnected && address && (
           <>
             <p className="text-sm text-gray-800 mb-2 break-all">
@@ -94,11 +101,6 @@ function Profile() {
               {isMinting ? "Minting..." : "Mint Tokens"}
             </button>
 
-            {isSuccess && (
-              <p className="mt-3 text-green-600 font-medium">
-                Minting successful!
-              </p>
-            )}
             {error && (
               <p className="mt-3 text-red-600 font-medium">
                 Error: {error.message}
