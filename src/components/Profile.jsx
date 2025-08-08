@@ -5,7 +5,7 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
-import { erc20Abi, ERC20_ADDRESS } from "../config/abi";
+import { erc20Abi } from "../config/abi";
 import { useState } from "react";
 import { formatUnits } from "viem";
 
@@ -21,7 +21,7 @@ function Profile() {
     refetch,
   } = useReadContract({
     abi: erc20Abi,
-    address: ERC20_ADDRESS,
+    address: process.env.ERC20_ADDRESS,
     functionName: "balanceOf",
     args: [address],
   });
@@ -47,7 +47,7 @@ function Profile() {
     try {
       await writeContract({
         abi: erc20Abi,
-        address: ERC20_ADDRESS,
+        address: process.env.ERC20_ADDRESS,
         functionName: "mint",
         args: [BigInt(mintAmount)],
       });

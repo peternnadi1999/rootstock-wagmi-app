@@ -57,4 +57,3 @@ export const erc20Abi = [
 	}
 ];
 
-export const ERC20_ADDRESS = "0xcb147945fba33842769cf4720ce25d326b3520c7"; // Replace with your deployed contract address
